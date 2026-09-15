@@ -1,3 +1,32 @@
+# Ext4Fsd — LTRData fork
+
+This is an LTRData fork of [Bo Branten's Ext4Fsd](https://github.com/bobranten/Ext4Fsd), itself based on Matt Wu's Ext2Fsd. The filesystem feature descriptions and Bo Branten's development notes below are preserved from upstream.
+
+The source on `master` is based on the February 2024 upstream snapshot, with [two LTRData commits from 1 March 2024](https://github.com/LTRData/Ext4Fsd/compare/e5acade8ef427e221b16b578194a8290b1ba98c2...6a9c283a8579705f5ef3ceafc4fcd3cc7e8239c0) for build compatibility and signing-package preparation. This fork should not be assumed to track current upstream.
+
+## Local changes and building
+
+- Project settings select Windows SDK 10.0.19041.0. The `Ext2Mgr` and `Ext2Srv` applications use the `v142` C++ toolset; `Ext2Mgr` also uses MFC. The driver uses the `WindowsKernelModeDriver10.0` WDK toolset.
+- Driver changes include header/declaration compatibility fixes and ARM/ARM64 guards around local CRT replacements.
+- [`Ext4Fsd/mkcab.cmd`](Ext4Fsd/mkcab.cmd) and a dummy INF add a local CAB packaging/signing workflow.
+
+To work on this fork:
+
+```sh
+git clone --branch master https://github.com/LTRData/Ext4Fsd.git
+cd Ext4Fsd
+```
+
+Open [`Ext4Fsd.sln`](Ext4Fsd.sln) with the selected C++ toolset, MFC components, SDK and WDK installed. The solution contains the filesystem driver, volume manager (`Ext2Mgr`) and service (`Ext2Srv`). The driver has Win32, x64, ARM and ARM64 configurations; the manager and service have Win32/x64 configurations and are not selected for build in the solution's ARM/ARM64 configurations. The driver output retains the filename `Ext2Fsd.sys`.
+
+The CAB script expects staged Release outputs and the `stampinf`, `inf2cat`, `cabarc` and `signtool` utilities. It contains a fixed signing-certificate selection and timestamp URL that must be adapted for another environment. Its final signing command signs the CAB; running it does not itself produce a Microsoft-signed driver. The OS list passed to the packaging tools is not a tested-platform list.
+
+## Inherited upstream README
+
+The signed-driver downloads, installation guidance, development status and contact details below refer to Bo Branten's upstream project. Those downloads should not be assumed to contain the LTRData changes described above.
+
+---
+
 
 New
 ---
